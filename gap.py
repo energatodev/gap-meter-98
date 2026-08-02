@@ -1,11 +1,30 @@
 import tkinter as tk
 from playsound import playsound
+from pathlib import Path
+import sys
 
 # Back-End
-# Funções dos botões
 
-contador = 0
+# Isso define a pasta raiz do programa
+if getattr(sys, "frozen", False):
+    BASE_DIR = Path(sys._MEIPASS)
+else:
+    BASE_DIR = Path(__file__).resolve().parent
 
+# Variavéis
+counter = 0
+
+Path_Image_bg = BASE_DIR / "assets" / "images" / "img_background.png"
+Path_Image_icon = BASE_DIR / "assets" / "images" / "img_icon.png"
+
+Path_Sound_open = BASE_DIR / "assets" / "sounds" / "snd_open.mp3"
+Path_Sound_close = BASE_DIR / "assets" / "sounds" / "snd_close.mp3"
+Path_Sound_up = BASE_DIR / "assets" / "sounds" / "snd_counter_up.mp3"
+Path_Sound_down = BASE_DIR / "assets" / "sounds" / "snd_counter_down.mp3"
+Path_Sound_about = BASE_DIR / "assets" / "sounds" / "snd_about.mp3"
+
+
+# Funções
 def Top_Level_About(event=None):
 
     about_window = tk.Toplevel(app)
@@ -40,7 +59,7 @@ def Top_Level_About(event=None):
 
     try:
         
-        playsound('assets/sounds/som_meme.mp3', block=False)
+        playsound(str(Path_Sound_about), block=False)
 
     except Exception as e:
         print("Erro ao tocar som de abrir:", e)
@@ -51,7 +70,7 @@ def Top_Level_About(event=None):
 def tocar_som_fechar():
     # Toca o som de fechamento (pode usar block=True aqui para garantir que toca antes de sair)
     try:
-        playsound('assets/sounds/som_fechar.mp3', block=True)
+        playsound(str(Path_Sound_close), block=True)
     except Exception as e:
         print("Erro ao tocar som de fechar:", e)
     
@@ -59,20 +78,20 @@ def tocar_som_fechar():
     app.destroy()
 
 def adicionar():
-    global contador
-    contador += 1
-    num_panel.config(text=str(contador))
-    playsound("assets/sounds/som_(+1).mp3", block=False)
+    global counter
+    counter += 1
+    num_panel.config(text=str(counter))
+    playsound(str(Path_Sound_up), block=False)
 
 def remover():
-    global contador
-    if contador > 0:
-        contador -= 1
-        num_panel.config(text=str(contador))
-        playsound("assets/sounds/som_(-1).mp3", block=False)
+    global counter
+    if counter > 0:
+        counter -= 1
+        num_panel.config(text=str(counter))
+        playsound(str(Path_Sound_down), block=False)
 
 try:
-    playsound('assets/sounds/som_abrir.mp3', block=False)
+    playsound(str(Path_Sound_open), block=False)
 except Exception as e:
     print("Erro ao tocar som de abrir:", e)
 
@@ -80,13 +99,17 @@ except Exception as e:
 # Front-End
 # Janela principal
 app = tk.Tk()
+
+icon = tk.PhotoImage(file=str(Path_Image_icon))
+
 app.title("ETI's Gap Meter 98 Deluxe")
 app.geometry("300x241")
 app.resizable(False, False)
+app.iconphoto(True, icon)
 
 # Frame Principal
 
-et_photo = tk.PhotoImage(file="./assets/images/Design sem nome.png")
+et_photo = tk.PhotoImage(file=str(Path_Image_bg))
 
 principal_frame = tk.LabelFrame(master=app, borderwidth=1, highlightbackground="blue", highlightthickness=5)
 principal_frame.pack(expand=True, fill='both')
@@ -124,6 +147,8 @@ add_btn.pack(side=tk.LEFT, padx=2)
 
 remove_btn = tk.Button(panel_frame, text="-1", command=remover, font="Fixedsys 17", cursor="hand2")
 remove_btn.pack(side=tk.RIGHT, padx=2)
+
+
 
 app.protocol("WM_DELETE_WINDOW", tocar_som_fechar)
 
