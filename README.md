@@ -20,5 +20,4 @@ Instalando no Windows 7
     
 ## Licença
 
-n tem, se quiser usa ai, se n quiser n usa.
-
+MIT License, ou seja, faz o q der na telha, só lembra de me dar os créditos blz.
